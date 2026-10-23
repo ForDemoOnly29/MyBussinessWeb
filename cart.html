@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>My Cart | j4ma MotorShop</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/jpeg" href="Backgroundlogo.jpg">
+</head>
+
+<body class="cart-page-bg">
+
+<header class="cart-header">
+    <div class="logo">
+        <img src="Backgroundlogo.jpg" alt="j4ma MotorShop Logo">
+        <p>j4ma MotorShop</p>
+    </div>
+
+    <nav>
+        <a href="index.html">Home</a>
+        <a href="products.html">Products</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="comments.html">Reviews</a>
+    </nav>
+</header>
+
+<main class="cart-page">
+
+    <h1 class="cart-title">
+        <span>🛒</span> My Shopping Cart
+    </h1>
+
+    <div id="cartItems"></div>
+
+    <section class="cart-summary">
+        <h2>
+            Total: <span>₱<span id="cartTotal">0</span></span>
+        </h2>
+
+        <div class="cart-actions">
+            <button class="checkout-button" onclick="goToCheckout()">
+                CHECKOUT
+            </button>
+
+            <button class="clear-button" onclick="clearCart()">
+                CLEAR CART
+            </button>
+        </div>
+    </section>
+
+    <a href="products.html" class="continue-shopping">
+        ← Continue Shopping
+    </a>
+
+</main>
+
+<script>
+function getCart() {
+    return JSON.parse(localStorage.getItem("cart")) || [];
+}
+
+function saveCart(cart) {
+    localStorage.setItem("cart", JSON.stringify(cart));
+}
+
+function displayCart() {
+    const cart = getCart();
+    const cartItems = document.getElementById("cartItems");
+    let total = 0;
+
+    if (cart.length === 0) {
+        cartItems.innerHTML = `
+            <div class="empty-cart">
+                <div class="empty-cart-icon">🛒</div>
+                <h2>Your cart is empty</h2>
+                <p>You haven't added any motorcycle parts yet.</p>
+                <a href="products.html">BROWSE PRODUCTS</a>
+            </div>
+        `;
+
+        document.getElementById("cartTotal").textContent = "0";
+        return;
+    }
+
+    cartItems.innerHTML = "";
+
+    cart.forEach(function(product, index) {
+        const price = Number(product.price) || 0;
+        const quantity = Math.max(1, Number(product.quantity) || 1);
+        const subtotal = price * quantity;
+
+        total += subtotal;
+
+        const item = document.createElement("div");
+        item.className = "cart-item";
+
+        const image = document.createElement("img");
+        image.className = "cart-product-image";
+        image.src = product.image || "Backgroundlogo.jpg";
+        image.alt = product.name || "Motorcycle part";
+
+        image.onerror = function() {
+            this.onerror = null;
+            this.src = "Backgroundlogo.jpg";
+        };
+
+        const info = document.createElement("div");
+        info.className = "cart-item-info";
+
+        const name = document.createElement("h3");
+        name.textContent = product.name || "Motorcycle Part";
+
+        const priceText = document.createElement("p");
+        priceText.className = "cart-price";
+        priceText.textContent = "Price: ₱" + price.toLocaleString("en-PH");
+
+        const quantityBox = document.createElement("div");
+        quantityBox.className = "quantity";
+
+        const minus = document.createElement("button");
+        minus.type = "button";
+        minus.textContent = "−";
+        minus.setAttribute("aria-label", "Decrease quantity");
+        minus.onclick = function() {
+            changeQuantity(index, -1);
+        };
+
+        const quantityText = document.createElement("span");
+        quantityText.textContent = quantity;
+
+        const plus = document.createElement("button");
+        plus.type = "button";
+        plus.textContent = "+";
+        plus.setAttribute("aria-label", "Increase quantity");
+        plus.onclick = function() {
+            changeQuantity(index, 1);
+        };
+
+        quantityBox.append(minus, quantityText, plus);
+
+        const subtotalText = document.createElement("strong");
+        subtotalText.className = "cart-subtotal";
+        subtotalText.textContent =
+            "Subtotal: ₱" + subtotal.toLocaleString("en-PH");
+
+        info.append(name, priceText, quantityBox, subtotalText);
+
+        const remove = document.createElement("button");
+        remove.type = "button";
+        remove.className = "remove-button";
+        remove.textContent = "Remove";
+        remove.onclick = function() {
+            removeProduct(index);
+        };
+
+        item.append(image, info, remove);
+        cartItems.appendChild(item);
+    });
+
+    document.getElementById("cartTotal").textContent =
+        total.toLocaleString("en-PH");
+}
+
+function changeQuantity(index, amount) {
+    const cart = getCart();
+
+    if (!cart[index]) return;
+
+    cart[index].quantity =
+        (Number(cart[index].quantity) || 1) + amount;
+
+    if (cart[index].quantity <= 0) {
+        cart.splice(index, 1);
+    }
+
+    saveCart(cart);
+    displayCart();
+}
+
+function removeProduct(index) {
+    const cart = getCart();
+
+    if (!cart[index]) return;
+
+    cart.splice(index, 1);
+    saveCart(cart);
+    displayCart();
+}
+
+function clearCart() {
+    if (getCart().length === 0) {
+        alert("Your cart is already empty.");
+        return;
+    }
+
+    if (confirm("Are you sure you want to clear your cart?")) {
+        localStorage.removeItem("cart");
+        displayCart();
+    }
+}
+
+function goToCheckout() {
+    if (getCart().length === 0) {
+        alert("Your cart is empty! Please add some products first.");
+        return;
+    }
+
+    window.location.href = "checkout.html";
+}
+
+displayCart();
+</script>
+
+</body>
+</html>

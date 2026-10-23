@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Contact | j4ma MotorShop</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" type="image/jpeg" href="Backgroundlogo.jpg">
+
+</head>
+
+<body>
+
+<script>
+
+if (localStorage.getItem("isLoggedIn") !== "true") {
+    window.location.href = "login.html";
+}
+
+</script>
+
+
+    <header>
+
+        <div class="logo">
+            <img src="Backgroundlogo.jpg" alt="j4ma MotorShop Logo">
+            j4ma MotorShop
+        </div>
+
+        <nav>
+            <a href="index.html">Home</a>
+            <a href="products.html">Products</a>
+            <a href="about.html">About</a>
+            <a href="contact.html">Contact</a>
+            <a href="comments.html">Reviews</a>
+        </nav>
+
+        <div class="search-area">
+            <input type="text" placeholder="Search parts...">
+            <button type="button" class="btn-search">Search</button>
+        </div>
+
+        <div class="user-auth">
+            <a href="cart.html" class="btn-cart">
+            🛒 Cart (<span id="cart-count">0</span>)
+            </a>
+
+            <a href="login.html" class="btn-login">
+                Login
+            <a href="#" class="btn-logout" onclick="logout()">
+                Logout      
+            </a>
+        </div>
+
+    </header>
+
+    <section id="contact">
+
+        <div class="title">
+
+            <h2>Contact Us</h2>
+
+            <p>
+                Send us a message for inquiries and orders.
+            </p>
+
+        </div>
+
+
+        <div class="contact">
+
+            <div class="contact-info">
+
+                <h3>j4ma MotorShop</h3>
+
+                <p>
+                    Location: Labuan, Zamboanga City. Philippines
+                </p>
+
+                <p>
+                    Phone: 09453789226
+                </p>
+
+                <p>
+                    Email: Manaogjhonmark16@gmail.com
+                </p>
+
+                <p>
+                    Open: Monday - Saturday
+                </p>
+
+                <p>
+                    8:00 AM - 6:00 PM
+                </p>
+
+            </div>
+
+
+            <form id="inquiryForm">
+
+                <input
+                    type="text"
+                    placeholder="Your Name"
+                    required
+                >
+
+                <input
+                    type="email"
+                    placeholder="Your Email"
+                    required
+                >
+
+                <input
+                    type="text"
+                    placeholder="Motorcycle Model"
+                    required
+                >
+
+                <textarea
+                    placeholder="What part are you looking for?"
+                    required
+                ></textarea>
+
+                <button type="submit">
+                    SEND INQUIRY
+                </button>
+
+            </form>
+
+        </div>
+
+        
+    </section>
+
+<!-- SUCCESSFUL INQUIRY DIALOG -->
+            <div id="successDialog" class="inquiry-overlay">
+
+        <div class="inquiry-dialog">
+
+                <div class="success-icon">✓</div>
+
+                <h2>Inquiry Sent Successfully!</h2>
+
+                <p>
+                        Thank you for contacting j4ma MotorShop!
+                        We have received your inquiry.
+                        We appreciate your interest in our products.
+                </p>
+
+                <button type="button" onclick="closeInquiryDialog()">
+                        OK, Thank You!
+                </button>
+
+        </div>
+
+
+        <footer>
+
+        <p>
+            © 2026 j4ma MotorShop. All Rights Reserved.
+        </p>
+
+        <p>
+            Modified Parts • Accessories • Motorcycle Customization
+        </p>
+
+    </footer>
+
+
+<script>
+function logout() {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("username");
+
+    window.location.href = "login.html";
+}
+
+// SEND INQUIRY
+document.getElementById("inquiryForm").addEventListener("submit", function(event) {
+    event.preventDefault();
+
+    document.getElementById("successDialog").style.display = "flex";
+
+    this.reset();
+});
+
+// CLOSE SUCCESS DIALOG
+function closeInquiryDialog() {
+    document.getElementById("successDialog").style.display = "none";
+}
+</script>
+
+</body>
+</html>
